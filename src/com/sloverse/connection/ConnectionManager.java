@@ -2,7 +2,7 @@ package com.sloverse.connection;
 
 import java.io.IOException;
 
-import com.sloverse.data.BundledObject;
+import com.sloverse.data.bundles.BundledObject;
 import com.sloverse.util.logger.LoggerUtil;
 
 public class ConnectionManager {

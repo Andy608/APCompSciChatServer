@@ -1,4 +1,4 @@
-package com.sloverse.util.connection;
+package com.sloverse.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

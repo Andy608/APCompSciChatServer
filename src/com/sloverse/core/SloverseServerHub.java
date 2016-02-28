@@ -5,8 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import com.sloverse.connection.HubServerManager;
+import com.sloverse.util.ConnectionUtil;
 import com.sloverse.util.FileUtil;
-import com.sloverse.util.connection.ConnectionUtil;
 import com.sloverse.util.logger.LoggerUtil;
 import com.sloverse.window.HubFrame;
 

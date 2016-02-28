@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.sloverse.util.connection.ConnectionUtil;
+import com.sloverse.util.ConnectionUtil;
 import com.sloverse.util.logger.LoggerUtil;
 
 
@@ -35,6 +35,7 @@ public class HubServerManager extends Thread {
 			while (isRunning()) {
 				LoggerUtil.logInfo(HubServerManager.class, "INSIDE: " + isRunning());
 				//Accept incoming connection and create a new ServerToHubConnectionThread.
+				new ConnectionThread(serverSocket.accept()).start();
 			}
 			LoggerUtil.logInfo(HubServerManager.class, "AFTER: " + isRunning());
 		} catch (IllegalArgumentException | IOException e) {
