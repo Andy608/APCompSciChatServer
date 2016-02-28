@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import com.sloverse.connection.HubServerManager;
 import com.sloverse.util.FileUtil;
+import com.sloverse.util.connection.ConnectionUtil;
 import com.sloverse.util.logger.LoggerUtil;
 import com.sloverse.window.HubFrame;
 
@@ -31,13 +33,19 @@ public class SloverseServerHub {
 		
 		LoggerUtil.init();
 		Thread.setDefaultUncaughtExceptionHandler(LoggerUtil.getInstance());
+		Thread.currentThread().setName("Main Thread");
 		
 		frame = new HubFrame(NAME + " | " + VERSION, 900, 500);
 		frame.setVisible(true);
 		
-		ServerToHubHandler testServer = new ServerToHubHandler(10000);
-		testServer.startServer();
+		HubServerManager testServerManager = new HubServerManager(12081);
+		
+//		testServerManager.setIsServerToHubServerRunning(isServerToHubRunning);
+		testServerManager.startServerToHubServer();
+		testServerManager.setName("Hub Thread");
 		LoggerUtil.logInfo(SloverseServerHub.class, "TEST!");
-		testServer.stopServer();
+		boolean isServerRunning = ConnectionUtil.isServerRunning(testServerManager.getServerIP(), testServerManager.getPort(), HubServerManager.TIME_OUT);
+		LoggerUtil.logInfo(SloverseServerHub.class, "SERVER IS CURRENTLY " + (isServerRunning ? "ONLINE" : "OFFLINE"));
+		testServerManager.stopServerToHubServer();
 	}
 }

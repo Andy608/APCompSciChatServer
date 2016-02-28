@@ -45,7 +45,7 @@ public class LoggerUtil implements Thread.UncaughtExceptionHandler {
 						"log4j.appender.consoleLogger=org.apache.log4j.ConsoleAppender" + FileUtil.ENTER +
 						"log4j.appender.consoleLogger.layout=org.apache.log4j.PatternLayout" + FileUtil.ENTER +
 						"# Set layout for the consoleLogger" + FileUtil.ENTER +
-						"log4j.appender.consoleLogger.layout.ConversionPattern=[%d{HH:mm:ss}] [%p] [%c{1}]: %m%n");
+						"log4j.appender.consoleLogger.layout.ConversionPattern=[%d{HH:mm:ss}] [%p] [%c{1}] [%t]: %m%n");
 			} catch (FileNotFoundException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -61,7 +61,7 @@ public class LoggerUtil implements Thread.UncaughtExceptionHandler {
 	
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		logError(this.getClass(), t, e);
+		logError(this.getClass(), e);
 	}
 	
 	private static Logger getLogger(Class<?> c) {
@@ -73,28 +73,16 @@ public class LoggerUtil implements Thread.UncaughtExceptionHandler {
 	}
 	
 	public static void logWarn(Class<?> c, String warnMessage) {
-		logWarn(c, Thread.currentThread(), warnMessage);
-	}
-	
-	public static void logError(Class<?> c, Throwable e) {
-		logError(c, Thread.currentThread(), e);
-	}
-	
-	public static void logWarn(Class<?> c, Thread t, String warnMessage) {
-		getLogger(c).warn("Warning coming from class: " + t.getName() + " | " + warnMessage);
+		getLogger(c).warn("Warning coming from class: " + c.getName() + " | " + warnMessage);
 	}
 	
 	public static void logWarn(Class<?> c, Throwable e, String warnMessage, boolean logToFile) {
-		logWarn(c, Thread.currentThread(), e, warnMessage, logToFile);
-	}
-	
-	public static void logWarn(Class<?> c, Thread t, Throwable e, String warnMessage, boolean logToFile) {
 		String date = getDate(DATE_FORMAT);
 		String message = FileUtil.ENTER + "---------- " + SloverseServerHub.NAME + " Warning Report ----------" + FileUtil.ENTER + FileUtil.ENTER + date
 				+ FileUtil.ENTER + FileUtil.ENTER + "Keep calm! I can get back up from this!" + FileUtil.ENTER + FileUtil.ENTER
 				+ "Details about the crash are listed below" + FileUtil.ENTER
 				+ "---------------------------------------" + FileUtil.ENTER + FileUtil.ENTER +
-				"Crash occured in class: " + t.getName() + " | " + warnMessage;
+				"Crash occured in class: " + c.getSimpleName() + " | " + warnMessage;
 		
 		getLogger(c).warn(message, e);
 		
@@ -108,13 +96,18 @@ public class LoggerUtil implements Thread.UncaughtExceptionHandler {
 	 * @param t: The thread the error occurred on.
 	 * @param e: The throwable, or actual error itself.
 	 */
-	public static void logError(Class<?> c, Thread t, Throwable e) {
+	public static void logError(Class<?> c, Throwable e) {
+		logError(c, "", e);
+	}
+	
+	public static void logError(Class<?> c, String errorMessage, Throwable e) {
 		String date = getDate(DATE_FORMAT);
 		String message = FileUtil.ENTER + "---------- " + SloverseServerHub.NAME + " Error Report ----------" + FileUtil.ENTER + FileUtil.ENTER + date
 				+ FileUtil.ENTER + FileUtil.ENTER + "Help! I've fallen and I can't get up!" + FileUtil.ENTER + FileUtil.ENTER
 				+ "Details about the crash are listed below" + FileUtil.ENTER
 				+ "---------------------------------------" + FileUtil.ENTER + FileUtil.ENTER +
-				"Crash occured in class: " + t.getName();
+				errorMessage +
+				" Crash occured in class: " + c.getSimpleName();
 		
 		getLogger(c).error(message, e);
 		logToErrorFile(date, message, e);
